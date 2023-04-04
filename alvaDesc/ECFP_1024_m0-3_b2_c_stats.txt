@@ -1,0 +1,41 @@
+Version: 2.0.0
+Type: Extended Connectivity FINGERPRINTS
+Size (bits): 1024
+Bits per pattern: 2
+Minimum fragment length: 0
+Maximum fragment length: 3
+Count fragments: True
+Atom options: Atom type|Aromaticity|Connectivity (total)|Charge|Bond order
+
+Total molecules: 4426
+Processed molecules: 4426
+
+Number of distinct fragments - (average per molecule): 9246 - (2.09)
+Number of total fragments - (average per molecule): 999097 - (225.73)
+
+Number of distinct fragments of length 0 (%) - (average per molecule): 44 (0.48%) - (0.01)
+Number of distinct fragments of length 1 (%) - (average per molecule): 400 (4.33%) - (0.09)
+Number of distinct fragments of length 2 (%) - (average per molecule): 2290 (24.77%) - (0.52)
+Number of distinct fragments of length 3 (%) - (average per molecule): 6512 (70.43%) - (1.47)
+
+Number of total fragments of length 0 (%) - (average per molecule): 278216 (27.85%) - (62.86)
+Number of total fragments of length 1 (%) - (average per molecule): 277274 (27.75%) - (62.65)
+Number of total fragments of length 2 (%) - (average per molecule): 231632 (23.18%) - (52.33)
+Number of total fragments of length 3 (%) - (average per molecule): 211975 (21.22%) - (47.89)
+
+Minimum density: 9.77 %
+Maximum density: 78.52 %
+Average density: 34.77 %
+
+Density distribution:
+0.00 % - 10.00 % : 0.11 %
+10.00 % - 20.00 % : 7.64 %
+20.00 % - 30.00 % : 29.10 %
+30.00 % - 40.00 % : 37.17 %
+40.00 % - 50.00 % : 16.02 %
+50.00 % - 60.00 % : 8.52 %
+60.00 % - 70.00 % : 1.76 %
+70.00 % - 80.00 % : 0.56 %
+80.00 % - 90.00 % : 0.00 %
+90.00 % - 100.00 % : 0.00 %
+
