@@ -1,4 +1,4 @@
-def pca_dashboard(original_data, pca_data, pca, hue):
+def pca_dashboard(original_data, pca_data, pca, hue, continuous=False):
     import matplotlib.pyplot as plt
     import seaborn as sns
     import numpy as np
@@ -17,7 +17,12 @@ def pca_dashboard(original_data, pca_data, pca, hue):
     scatter_z = pca_data[["PC3"]].values
     hue_group = pca_data[[hue]].values
     
-    ax_3D.scatter(scatter_x, scatter_y, scatter_z, c=hue_group)
+    if continuous:
+        ax_3D.scatter(scatter_x, scatter_y, scatter_z, c=hue_group)
+    else:
+        for g in np.unique(hue_group):
+            i = np.where(hue_group==g)
+            ax_3D.scatter(scatter_x[i], scatter_y[i], scatter_z[i], label=g)
 
     ax_3D.set_xlabel("PC1")
     ax_3D.set_ylabel("PC2")
