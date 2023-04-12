@@ -50,3 +50,67 @@ def pca_dashboard(original_data, pca_data, pca, hue, continuous=False):
     )
 
     plt.tight_layout()
+
+
+def bic_score(X, labels):
+    """
+    BIC score for the goodness of fit of clusters.
+    This Python function is directly translated from the GoLang code made by the author of the paper. 
+    The original code is available here: https://github.com/bobhancock/goxmeans/blob/a78e909e374c6f97ddd04a239658c7c5b7365e5c/km.go#L778
+    """
+    import numpy as np
+
+    n_points = len(labels)
+    n_clusters = len(set(labels))
+    n_dimensions = X.shape[1]
+
+    n_parameters = (n_clusters - 1) + (n_dimensions * n_clusters) + 1
+
+    loglikelihood = 0
+    for label_name in set(labels):
+        X_cluster = X[labels == label_name].to_numpy()
+        n_points_cluster = len(X_cluster)
+        centroid = np.mean(X_cluster, axis=0)
+        variance = np.sum((X_cluster - centroid) ** 2) / (len(X_cluster) - 1)
+        loglikelihood += \
+            n_points_cluster * np.log(n_points_cluster) \
+            - n_points_cluster * np.log(n_points) \
+            - n_points_cluster * n_dimensions / 2 * np.log(2 * math.pi * variance) \
+            - (n_points_cluster - 1) / 2
+
+    bic = loglikelihood - (n_parameters / 2) * np.log(n_points)
+        
+    return bic
+
+
+def regression_results(reg_model, X_train, X_test, Y_train, Y_test):
+    import pandas as pd
+    from sklearn.metrics import r2_score, mean_absolute_error
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    pred_train = reg_model.predict(X_train)
+    pred_test = reg_model.predict(X_test)
+    train_df = pd.DataFrame.from_dict({'True': Y_train, 'Predicted': pred_train})
+    test_df = pd.DataFrame.from_dict({'True': Y_test, 'Predicted': pred_test})
+
+
+    # ---- train results ----
+    r2 = r2_score(Y_train, pred_train)
+    train_mae = mean_absolute_error(Y_train, pred_train)
+
+    # ---- test results ----
+    q2 = r2_score(Y_test, pred_test)
+    test_mae = mean_absolute_error(Y_test, pred_test)
+
+
+    fig, axes = plt.subplots(1,2, figsize=(15, 5))
+    fig.suptitle('RandomForest Regression Model')
+
+    # Training Set Results
+    sns.scatterplot(ax=axes[0], data=train_df, x='True', y='Predicted')
+    axes[0].set_title(f"Training Set: r2 -> {round(r2,2)}, mae -> {round(train_mae, 2)}")
+
+    # Test Set Results
+    sns.scatterplot(ax=axes[1], data=test_df, x='True', y='Predicted')
+    axes[1].set_title(f"Test Set: q2 -> {round(q2, 2)}, mae -> {round(test_mae, 2)}")
