@@ -1,10 +1,17 @@
-def pca_dashboard(original_data, pca_data, pca, hue, continuous=False):
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    import numpy as np
-    import pandas as pd
+from sklearn.mixture import GaussianMixture
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import pandas as pd
+from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.mixture import GaussianMixture
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def pca_dashboard(original_data, pca_data, pca, hue, continuous=False, title="Default"):
+    
     fig = plt.figure(figsize=(12,10))
-    fig.suptitle("Principal Component Analysis")
+    fig.suptitle(f"{title} Principal Component Analysis")
     
     ax_2D = fig.add_subplot(2,2,1)
 
@@ -58,7 +65,6 @@ def bic_score(X, labels):
     This Python function is directly translated from the GoLang code made by the author of the paper. 
     The original code is available here: https://github.com/bobhancock/goxmeans/blob/a78e909e374c6f97ddd04a239658c7c5b7365e5c/km.go#L778
     """
-    import numpy as np
 
     n_points = len(labels)
     n_clusters = len(set(labels))
@@ -83,11 +89,7 @@ def bic_score(X, labels):
     return bic
 
 
-def regression_results(reg_model, X_train, X_test, Y_train, Y_test):
-    import pandas as pd
-    from sklearn.metrics import r2_score, mean_absolute_error
-    import matplotlib.pyplot as plt
-    import seaborn as sns
+def regression_results(reg_model, X_train, X_test, Y_train, Y_test, title="Default:"):
 
     pred_train = reg_model.predict(X_train)
     pred_test = reg_model.predict(X_test)
@@ -105,7 +107,7 @@ def regression_results(reg_model, X_train, X_test, Y_train, Y_test):
 
 
     fig, axes = plt.subplots(1,2, figsize=(15, 5))
-    fig.suptitle('RandomForest Regression Model')
+    fig.suptitle(f'{title} RandomForest Regression Model')
 
     # Training Set Results
     sns.scatterplot(ax=axes[0], data=train_df, x='True', y='Predicted')
@@ -114,3 +116,23 @@ def regression_results(reg_model, X_train, X_test, Y_train, Y_test):
     # Test Set Results
     sns.scatterplot(ax=axes[1], data=test_df, x='True', y='Predicted')
     axes[1].set_title(f"Test Set: q2 -> {round(q2, 2)}, mae -> {round(test_mae, 2)}")
+
+
+def gmm_bic_search(descriptors):
+    
+    n_range = range(2,11)
+
+    bic_score = []
+    aic_score = []
+
+    for n in n_range:
+        gm = GaussianMixture(n_components=n,
+                            random_state=42,
+                            n_init=10
+                            )
+        gm.fit(descriptors)
+        bic_score.append(gm.bic(descriptors))
+
+    gm_df = pd.DataFrame.from_dict({"n_components": n_range, "BIC": bic_score})
+
+    sns.lineplot(data=gm_df, x="n_components", y="BIC")
